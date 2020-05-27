@@ -12,7 +12,12 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import shortid from 'shortid';
 
-const Formulario = ({ citas, setCitas, guardarMostrarForm }) => {
+const Formulario = ({
+  citas,
+  setCitas,
+  guardarMostrarForm,
+  guardarCitasStorage
+}) => {
   const [paciente, guardarPaciente] = useState('');
   const [propietario, guardarPropietario] = useState('');
   const [telefono, guardarTelefono] = useState('');
@@ -78,6 +83,9 @@ const Formulario = ({ citas, setCitas, guardarMostrarForm }) => {
     // Agregar al state
     const citasNuevo = [...citas, cita];
     setCitas(citasNuevo);
+
+    //Pasar las citas nuevas al Storage
+    guardarCitasStorage(JSON.stringify(citasNuevo));
 
     //Ocultarel formulario
     guardarMostrarForm(false);
@@ -199,7 +207,8 @@ const styles = StyleSheet.create({
   btnSubmit: {
     padding: 10,
     backgroundColor: '#F72076',
-    marginVertical: 10
+    marginVertical: 10,
+    borderRadius: 22
   },
   textoSubmit: {
     color: '#FFF',
