@@ -4,7 +4,6 @@ import { Text, StyleSheet, View, TouchableHighlight } from 'react-native';
 const Cita = ({ item, eliminarPaciente }) => {
   const dialogoEliminar = id => {
     console.log('eliminando', id);
-
     eliminarPaciente(id);
   };
 
@@ -57,12 +56,13 @@ const styles = StyleSheet.create({
   btnEliminar: {
     padding: 10,
     backgroundColor: 'red',
-    marginVertical: 10
+    marginVertical: 10,
+    borderRadius: 20
   },
   textoEliminar: {
     color: '#FFF',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 22,
     textAlign: 'center'
   }
 });
