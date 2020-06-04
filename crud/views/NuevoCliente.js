@@ -11,7 +11,9 @@ import {
 import globalStyles from '../styles/global';
 import axios from 'axios';
 
-const NuevoCliente = ({navigation}) => {
+const NuevoCliente = ({navigation, route}) => {
+  const {guardarConsultarAPI} = route.params;
+
   // Campos formulario
   const [nombre, guardarNombre] = useState('');
   const [telefono, guardarTelefono] = useState('');
@@ -49,6 +51,9 @@ const NuevoCliente = ({navigation}) => {
     guardarTelefono('');
     guardarCorreo('');
     guardarEmpresa('');
+
+    //Cambiar a true para traernos el nuevo cliente
+    guardarConsultarAPI(true);
   };
   return (
     <View style={globalStyles.contenedor}>
