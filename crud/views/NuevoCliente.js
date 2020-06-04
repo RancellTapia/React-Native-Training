@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Platform} from 'react-native';
 import {
   TextInput,
@@ -21,6 +21,18 @@ const NuevoCliente = ({navigation, route}) => {
   const [empresa, guardarEmpresa] = useState('');
   const [alerta, guardarAlerta] = useState(false);
 
+  //Detectar si estamos editando o no
+  useEffect(() => {
+    if (route.params.cliente) {
+      const {nombre, telefono, correo, empresa} = route.params.cliente;
+
+      guardarNombre(nombre);
+      guardarTelefono(telefono);
+      guardarCorreo(correo);
+      guardarEmpresa(empresa);
+    }
+  }, []);
+
   // Almacena el cliente en la BD
   const guardarCliente = async () => {
     // Validar
@@ -32,15 +44,28 @@ const NuevoCliente = ({navigation, route}) => {
     //Generar el cliente
     const cliente = {nombre, telefono, correo, empresa};
 
-    //Guardar el cliente en la API
-    try {
-      if (Platform.OS === 'ios') {
-        await axios.post('http://localhost:3000/cliente', cliente);
-      } else {
-        await axios.post('http://10.0.2.2:3000/cliente');
+    //Si estamos editando o creando un nuevo cliente
+    if (route.params.cliente) {
+      const {id} = route.params.cliente;
+      cliente.id = id;
+      const url = `http://localhost:3000/cliente/${id}`;
+
+      try {
+        await axios.put(url, cliente);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      //Guardar el cliente en la API
+      try {
+        if (Platform.OS === 'ios') {
+          await axios.post('http://localhost:3000/cliente', cliente);
+        } else {
+          await axios.post('http://10.0.2.2:3000/cliente');
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     //Redireccionar
@@ -58,7 +83,7 @@ const NuevoCliente = ({navigation, route}) => {
   return (
     <View style={globalStyles.contenedor}>
       <Headline style={globalStyles.titulo} size={80}>
-        Añadir Nuevo Cliente
+        {route.params.cliente ? 'Editando Cliente' : 'Añadir Nuevo Cliente'}
       </Headline>
 
       <TextInput

@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -46,13 +45,6 @@ const App = () => {
               component={Inicio}
               options={({navigation, route}) => ({
                 headerTitleAlign: 'center',
-                // headerLeft: props => (
-                //   <BarraSuperior
-                //     {...props}
-                //     navigation={navigation}
-                //     route={route}
-                //   />
-                // ),
               })}
             />
             <Stack.Screen
@@ -71,7 +63,5 @@ const App = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;

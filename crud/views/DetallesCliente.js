@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {Headline, Text, Subheading, Button} from 'react-native-paper';
+import {Headline, Text, Subheading, Button, FAB} from 'react-native-paper';
 import globalStyles from '../styles/global';
 import axios from 'axios';
 
@@ -21,7 +21,6 @@ const DetallesCliente = ({navigation, route}) => {
 
   const eliminarContacto = async () => {
     const url = `http://localhost:3000/cliente/${id}`;
-    console.log(url);
 
     try {
       await axios.delete(url);
@@ -56,6 +55,17 @@ const DetallesCliente = ({navigation, route}) => {
         onPress={() => mostrarConfirmacion()}>
         Eliminar Cliente
       </Button>
+
+      <FAB
+        icon="pencil"
+        style={globalStyles.fab}
+        onPress={() =>
+          navigation.navigate('NuevoCliente', {
+            cliente: route.params.item,
+            guardarConsultarAPI,
+          })
+        }
+      />
     </View>
   );
 };
