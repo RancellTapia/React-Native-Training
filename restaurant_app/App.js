@@ -13,6 +13,7 @@ import ProgresoPedido from './views/ProgresoPedido';
 
 //Importar state de context
 import FirebaseState from './context/firebase/firebaseState';
+import PedidoState from './context/pedidos/pedidosState';
 
 const Stack = createStackNavigator();
 
@@ -20,65 +21,68 @@ const App = () => {
   return (
     <>
       <FirebaseState>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: '#FFDA00',
-              },
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}>
-            <Stack.Screen
-              name="Menu"
-              component={Menu}
-              options={{
-                title: 'Nuestro Menú',
-              }}
-            />
+        <PedidoState>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: '#FFDA00',
+                },
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+                headerTintColor: '#000',
+              }}>
+              <Stack.Screen
+                name="NuevaOrden"
+                component={NuevaOrden}
+                options={{
+                  title: 'Nueva Orden',
+                }}
+              />
 
-            <Stack.Screen
-              name="DetallePlatillo"
-              component={DetallePlatillo}
-              options={{
-                title: 'Detalle Platillo ',
-              }}
-            />
+              <Stack.Screen
+                name="Menu"
+                component={Menu}
+                options={{
+                  title: 'Nuestro Menú',
+                }}
+              />
 
-            <Stack.Screen
-              name="FormularioPlatillo"
-              component={FormularioPlatillo}
-              options={{
-                title: 'Ordenar Platillo ',
-              }}
-            />
+              <Stack.Screen
+                name="DetallePlatillo"
+                component={DetallePlatillo}
+                options={{
+                  title: 'Detalle Platillo ',
+                }}
+              />
 
-            <Stack.Screen
-              name="ResumenPedido"
-              component={ResumenPedido}
-              options={{
-                title: ' Resumen Pedido',
-              }}
-            />
+              <Stack.Screen
+                name="FormularioPlatillo"
+                component={FormularioPlatillo}
+                options={{
+                  title: 'Ordenar Platillo ',
+                }}
+              />
 
-            <Stack.Screen
-              name="ProgresoPedido"
-              component={ProgresoPedido}
-              options={{
-                title: 'Progreso de Pedido ',
-              }}
-            />
+              <Stack.Screen
+                name="ResumenPedido"
+                component={ResumenPedido}
+                options={{
+                  title: ' Resumen Pedido',
+                }}
+              />
 
-            <Stack.Screen
-              name="NuevaOrden"
-              component={NuevaOrden}
-              options={{
-                title: 'Nueva Orden',
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+              <Stack.Screen
+                name="ProgresoPedido"
+                component={ProgresoPedido}
+                options={{
+                  title: 'Progreso de Pedido ',
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PedidoState>
       </FirebaseState>
     </>
   );
