@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Alert} from 'react-native';
 import {
   Container,
   Content,
@@ -10,6 +10,8 @@ import {
   Text,
   Grid,
   Col,
+  Footer,
+  FooterTab,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import globalStyles from '../styles/global';
@@ -22,8 +24,11 @@ const FormularioPlatillo = () => {
   const [total, guardarTotal] = useState(0);
 
   //Context
-  const {platillo} = useContext(PedidosContext);
+  const {platillo, guardarPedido} = useContext(PedidosContext);
   const {precio} = platillo;
+
+  //Redireccionar
+  const navigation = useNavigation();
 
   //En cuanto el componente carga, calcular la cantidad total a pagar
   useEffect(() => {
@@ -44,10 +49,40 @@ const FormularioPlatillo = () => {
 
   //Decrementar en uno la cantidad
   const decrementar = () => {
-    if (cantidad !== 1) {
+    if (cantidad > 1) {
       const nuevaCantidad = parseInt(cantidad) - 1;
       guardarCantidad(nuevaCantidad);
     }
+  };
+
+  //Confirma si la orden es correcta
+  const confirmarOrden = () => {
+    Alert.alert(
+      'Deseas confirmar tu pedido?',
+      'Un pedido confirmado ya no se podrá modificar',
+      [
+        {
+          text: 'Confirmar',
+          onPress: () => {
+            //Almacenar el pedido al pedido principal
+            const pedido = {
+              ...platillo,
+              cantidad,
+              total,
+            };
+
+            guardarPedido(pedido);
+
+            //Navegar hacia el resumen
+            navigation.navigate('ResumenPedido');
+          },
+        },
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+      ],
+    );
   };
 
   return (
@@ -77,9 +112,17 @@ const FormularioPlatillo = () => {
             </Col>
           </Grid>
 
-          <Text style={globalStyles.cantidad}>Total: ${total}</Text>
+          <Text style={globalStyles.cantidad}>Subtotal: ${total}</Text>
         </Form>
       </Content>
+
+      <Footer>
+        <FooterTab>
+          <Button style={globalStyles.boton} onPress={() => confirmarOrden()}>
+            <Text style={globalStyles.botonTexto}> Agregar al pedido</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
     </Container>
   );
 };
