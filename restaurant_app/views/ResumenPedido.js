@@ -16,6 +16,7 @@ import {
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import globalStyles from '../styles/global';
+import firebase from '../firebase';
 
 import PedidosContext from '../context/pedidos/pedidosContext';
 
@@ -23,7 +24,13 @@ const ResumenPedido = () => {
   const navigation = useNavigation();
 
   //Context de pedido
-  const {pedido, total, mostrarResumen} = useContext(PedidosContext);
+  const {
+    pedido,
+    total,
+    mostrarResumen,
+    eliminarProducto,
+    pedidoRealizado,
+  } = useContext(PedidosContext);
 
   useEffect(() => {
     calcularTotal();
@@ -47,8 +54,31 @@ const ResumenPedido = () => {
       [
         {
           text: 'Confirmar',
-          onPress: () => {
-            navigation.navigate('ProgresoPedido');
+          onPress: async () => {
+            //Crear un objeto
+            const pedidoObj = {
+              tiempoentrega: 0,
+              completado: false,
+              total: Number(total),
+              orden: pedido, //Array
+              creado: Date.now(),
+            };
+
+            console.log(pedidoObj);
+
+            //Escribir el pedido en firebase
+
+            try {
+              const pedido = await firebase.db
+                .collection('ordenes')
+                .add(pedidoObj);
+              pedidoRealizado(pedido.id);
+
+              //Redireccionar a progreso
+              navigation.navigate('ProgresoPedido');
+            } catch (error) {
+              console.log(error);
+            }
           },
         },
         {
@@ -58,6 +88,28 @@ const ResumenPedido = () => {
       ],
     );
   };
+
+  //Elimina un producto del arreglo de pedido
+  const confirmarEliminacion = id => {
+    Alert.alert(
+      'Deseas eliminar este artículo?',
+      'Una vez eliminado no se puede recuperar',
+      [
+        {
+          text: 'Confirmar',
+          onPress: () => {
+            //Eliminar del state
+            eliminarProducto(id);
+          },
+        },
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+      ],
+    );
+  };
+
   return (
     <Container style={globalStyles.contenedor}>
       <Content style={globalStyles.contenido}>
@@ -77,6 +129,16 @@ const ResumenPedido = () => {
                   <Text>{nombre}</Text>
                   <Text>Cantidad: {cantidad}</Text>
                   <Text>Precio: ${precio}</Text>
+
+                  <Button
+                    onPress={() => confirmarEliminacion(id)}
+                    full
+                    danger
+                    style={{marginTop: 15}}>
+                    <Text style={[globalStyles.botonTexto, {color: '#FFF'}]}>
+                      Eliminar
+                    </Text>
+                  </Button>
                 </Body>
               </ListItem>
             </List>
