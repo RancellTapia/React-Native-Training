@@ -8,9 +8,9 @@ require('dotenv').config({ path: 'variables.env' });
 //Crea y firma JWT
 const crearToken = (usuario, secreta, expiresIn) => {
 	console.log(usuario);
-	const { id, email } = usuario;
+	const { id, email, nombre } = usuario;
 
-	return jwt.sign({ id, email }, secreta, { expiresIn });
+	return jwt.sign({ id, email, nombre }, secreta, { expiresIn });
 };
 
 const resolvers = {
@@ -46,11 +46,11 @@ const resolvers = {
 				const salt = await bcrypyjs.genSalt(10);
 				input.password = await bcrypyjs.hash(password, salt);
 
-				console.log(input);
+				// console.log(input);
 
 				//Registrar nuevo usuario
 				const nuevoUsuario = new Usuario(input);
-				console.log(nuevoUsuario);
+				// console.log(nuevoUsuario);
 
 				nuevoUsuario.save();
 				return 'Usuario Creado Correctamente';
@@ -81,7 +81,7 @@ const resolvers = {
 
 			//Dar acceso a la app
 			return {
-				token: crearToken(existeUsuario, process.env.SECRETA, '2hr'),
+				token: crearToken(existeUsuario, process.env.SECRETA, '1hr'),
 			};
 		},
 
